@@ -1,0 +1,16 @@
+{
+    "folders":
+    [
+        {
+            "path": "."
+        }
+    ],
+    "build_systems":
+    [
+        {
+          "name": "Make",
+          "working_dir": "${file_path}",
+          "shell_cmd": "make"
+        }
+    ]
+}
