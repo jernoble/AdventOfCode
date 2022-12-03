@@ -68,22 +68,21 @@ struct Round {
     }
 }
 
-var rounds: [Round] = Array()
-while true {
-    let maybeLine: String? = readLine()
-    if maybeLine == nil {
+let elapsed = ContinuousClock().measure {
+    var rounds: [Round] = Array()
+    var total = 0
+    while true {
+        if let line = readLine() {
+            if let round = Round.construct(with: line) {
+                rounds.append(round)
+            }
+            continue
+        }
         break
     }
-    let line = maybeLine!
-    if let round = Round.construct(with: line) {
-        rounds.append(round)
-    }
+
+    let total = rounds.reduce(0) { score, round in score + round.score() }
+    print("Total: \(total)")
 }
 
-// for round in rounds {
-//     print("Round: left:\(round.left) right:\(round.right) winner: \(round.winner())")
-//     print("Score: \(round.score())")
-// }
-
-let total = rounds.reduce(0) { score, round in score + round.score() }
-print("Total: \(total)")
+print("Elapsed: \(elapsed)")
