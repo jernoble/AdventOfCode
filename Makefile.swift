@@ -5,7 +5,8 @@ BUILDDIR = ../../build/$(YEAR)/$(DAY)/
 
 SRC = $(wildcard *.swift)
 BIN = $(patsubst %.swift,$(BUILDDIR)%,$(SRC))
-ALL : $(BUILDDIR) $(BIN) output
+OUTPUTS = $(patsubst %.swift,output.%,$(SRC))
+ALL : $(BUILDDIR) $(BIN) $(OUTPUTS)
 
 $(BUILDDIR) :
 	mkdir -p $(BUILDDIR)
@@ -13,8 +14,5 @@ $(BUILDDIR) :
 $(BUILDDIR)% : %.swift
 	swiftc -o $@ $^
 
-output : $(BIN) input.txt
-	for binary in $(BIN); do \
-		echo Running "$$binary"; \
-		./$$binary < input.txt; \
-	done
+output.% : $(BUILDDIR)%
+	$^ < input.txt
