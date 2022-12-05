@@ -12,7 +12,10 @@ $(BUILDDIR) :
 	mkdir -p $(BUILDDIR)
 
 $(BUILDDIR)% : %.swift
-	swiftc -o $@ $^
+	swiftc -g -o $@ $^
 
 output.% : $(BUILDDIR)%
 	$^ < input.txt
+
+clean:
+	rm $(BIN)
