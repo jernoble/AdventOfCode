@@ -70,7 +70,6 @@ struct Round {
 
 let elapsed = ContinuousClock().measure {
     var rounds: [Round] = Array()
-    var total = 0
     while true {
         if let line = readLine() {
             if let round = Round.construct(with: line) {

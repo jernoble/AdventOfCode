@@ -14,6 +14,7 @@ let elapsed = ContinuousClock().measure {
     }
     print("Elapsed Parsing: \(elapsedParse)")
 
+    var score = 0
     let elapsedCalculate = ContinuousClock().measure {
         var score = 2 * (rows.count - 1) + 2 * (columns.count - 1)
         var visibleTrees = [[Int]](repeating: [Int](repeating: 0, count: columns.count - 2), count: rows.count - 2)
