@@ -34,6 +34,20 @@ class Node: CustomStringConvertible, Hashable, Equatable {
     public var description: String { return "Node \(name), score:\(score), connections:\(names(of: connections))" }
 }
 
+struct NodePair: Hashable, Equatable {
+    var first: Node
+    var second: Node
+
+    static func == (lhs: NodePair, rhs: NodePair) -> Bool {
+        return lhs.first == rhs.first && lhs.second == rhs.second
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(first)
+        hasher.combine(second)
+    }
+}
+
 struct Map: CustomStringConvertible {
     var nodes = Set<Node>()
     var start: Node?
@@ -83,7 +97,14 @@ struct Map: CustomStringConvertible {
         start = nodes.first(where: { $0.name == "AA" })
     }
 
-    func shortestPath(from: Node, to: Node) -> [Node] {
+    var shortestPathCache = Dictionary<NodePair, [Node]>()
+
+    mutating func shortestPath(from: Node, to: Node) -> [Node] {
+        let nodePair = NodePair(first:from, second:to)
+        if let existingPath = shortestPathCache[nodePair] {
+            return existingPath
+        }
+
         nodes.forEach { $0.visit = -1 }
         from.visit = 0
         var visited = Set<Node>()
@@ -112,10 +133,12 @@ struct Map: CustomStringConvertible {
         } while nextNode != nil
         pathNodes.reverse()
 
+        shortestPathCache.updateValue(pathNodes, forKey: nodePair)
+
         return Array(pathNodes)
     }
 
-    func constructPath(from root: Node, through nodes: [Node]) -> [Node] {
+    mutating func constructPath(from root: Node, through nodes: [Node]) -> [Node] {
         var path = [root]
         var lastNode = root
         for node in nodes {
