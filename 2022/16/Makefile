@@ -1,1 +1,1 @@
-include ../../Makefile.swift
+include ../../Makefile.swift-build

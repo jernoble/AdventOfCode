@@ -1,0 +1,26 @@
+CWD = $(shell pwd)
+DAY = $(notdir $(CWD))
+YEAR = $(notdir $(patsubst %/,%, $(dir $(CWD))))
+BUILDDIR = ../../build/$(YEAR)/$(DAY)/
+CONFIGURATION = debug
+
+SRCDIRS = $(wildcard Sources/*)
+SRCNAMES = $(notdir $(SRCDIRS))
+SRC = $(addprefix Sources/,$(addsuffix /main.swift,$(SRCNAMES)))
+BIN = $(patsubst %,$(BUILDDIR)/$(CONFIGURATION)/%,$(SRCNAMES))
+OUTPUTS = $(patsubst %,output.%,$(SRCNAMES))
+ALL : $(BUILDDIR) $(OUTPUTS)
+
+SWIFTFLAGS = --scratch-path $(BUILDDIR) --configuration $(CONFIGURATION)
+
+$(BUILDDIR) :
+	mkdir -p $(BUILDDIR)
+
+$(BIN): $(BUILDDIR)/$(CONFIGURATION)/% : Sources/%/main.swift
+	swift build $(SWIFTFLAGS) --product $(notdir $(<D))
+
+$(OUTPUTS): output.%: $(BUILDDIR)/$(CONFIGURATION)/% input.txt
+	swift run --skip-build $(SWIFTFLAGS) $(<F) < input.txt
+
+clean:
+	rm -f $(OUTPUTS)
