@@ -2,7 +2,7 @@ CWD = $(shell pwd)
 DAY = $(notdir $(CWD))
 YEAR = $(notdir $(patsubst %/,%, $(dir $(CWD))))
 BUILDDIR = ../../build/$(YEAR)/$(DAY)/
-CONFIGURATION = debug
+CONFIGURATION ?= debug
 
 SRCDIRS = $(wildcard Sources/*)
 SRCNAMES = $(notdir $(SRCDIRS))
